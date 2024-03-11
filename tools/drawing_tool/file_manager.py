@@ -25,9 +25,8 @@ def create_and_save_image(canvas, width, height, label, dataset, ending=".png"):
         color = canvas.itemcget(item, "fill") 
         draw.ellipse(coords, fill=color)
     
-    print(file_path)
     image_index = len(os.listdir(file_path))
-    print("Index of Image: {}".format(image_index))
+    print(f"Index of {label}: {image_index}")
     image.save(os.path.join(file_path, f"{image_index}.png"))
 
 
