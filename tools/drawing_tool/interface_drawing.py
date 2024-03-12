@@ -1,8 +1,10 @@
 import random
 import tkinter as tk
-import tools.file_manager as files
+import sys
+sys.path.append('../file_tool/')
+import file_manager as files
 
-themes = "shapes_simple"
+themes = "letters_small" # change for other datasets (shapes_simple, letters_small)
 _width, _height = 256, 256
 _MAX_WIDTH, _MAX_HEIGHT = 1024, 576
 
@@ -86,35 +88,38 @@ canvas.pack()
 size_frame = tk.Frame(root)
 size_frame.pack(pady=10)
 
-width_label = tk.Label(size_frame, text="Breite:")
+width_label = tk.Label(size_frame, text="Width:")
 width_label.grid(row=0, column=0, padx=5)
 
 width_entry = tk.Entry(size_frame)
 width_entry.grid(row=0, column=1, padx=5)
 
-height_label = tk.Label(size_frame, text="Höhe:")
+height_label = tk.Label(size_frame, text="Height:")
 height_label.grid(row=0, column=2, padx=5)
 
 height_entry = tk.Entry(size_frame)
 height_entry.grid(row=0, column=3, padx=5)
 
-update_button = tk.Button(size_frame, text="Größe aktualisieren", command=_update_canvas_size)
+update_button = tk.Button(size_frame, text="Change Size", command=_update_canvas_size)
 update_button.grid(row=0, column=4, padx=5)
 
 button_frame = tk.Frame(root)
 button_frame.pack(pady=10)
 
-skip_button = tk.Button(button_frame, text="Thema überspringen", command=_skip_theme)
+skip_button = tk.Button(button_frame, text="Skip Topic", command=_skip_theme)
 skip_button.pack(side=tk.LEFT, padx=5)
 
-save_button = tk.Button(button_frame, text="Speichern", command=_save_image)
+save_button = tk.Button(button_frame, text="Save", command=_save_image)
 save_button.pack(side=tk.RIGHT, padx=5)
 
-clear_button = tk.Button(button_frame, text="Canvas löschen", command=_clear_canvas)
+clear_button = tk.Button(button_frame, text="Clear Canvas", command=_clear_canvas)
 clear_button.pack(side=tk.LEFT, padx=5)
 
-# Event Binding
+def callback(event):
+    print(event.num)
 
+# Event Binding
+root.bind("<Button>", callback)
 canvas.bind("<B1-Motion>", _draw)
 canvas.bind("<ButtonPress-1>", _start_draw)
 canvas.bind("<ButtonRelease-1>", _stop_draw)
