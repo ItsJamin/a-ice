@@ -1,21 +1,32 @@
 
 # About
 
-aIce ist ein Playground für Datenerstellung, Datenverarbeitung und Maschinelles lernen
+aIce is a playground for data creation, data processing and machine learning
 
 ## Machine Learning Models
 
 ### aCorn
 
-Ziel: das Erkennen von simplen, handgezeichneten Formen
+Aim: to recognize simple, hand-drawn shapes
 
 ## Tools
 
 ### Draw Tool
 
-Standards für Bilder:
+A tool to draw images for labels and add them to datasets.
+
+Standards for pictures:
 - 256x256
 
+## Data
 
+Current datasets:
 
+### simple shapes (256x256)
 
+Black and white images of hand-drawn shapes:
+- circle
+- line
+- cross
+- triangle
+- rectangle
