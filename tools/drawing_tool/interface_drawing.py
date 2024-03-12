@@ -17,7 +17,7 @@ previous_coordinates = None
 
 #--- (Event)-Functions ---#
 
-def _save_image():
+def _save_image(event=None):
     if chosen_theme.get() is not None:
         files.create_and_save_image(canvas, _width, _height, chosen_theme.get(), themes, ending = ".png")
         canvas.delete("all")
