@@ -11,7 +11,7 @@ _MAX_WIDTH, _MAX_HEIGHT = 1024, 576
 concepts_to_draw = []
 
 # Variables to record whether the mouse is pressed
-pencil_size = 12
+pencil_size = 8
 previous_point, current_point = [0,0], [0,0]
 
 #--- (Event)-Functions ---#
@@ -39,7 +39,7 @@ def _stop_draw(event):
     global previous_point
     previous_point = [0,0]
 
-def _draw(event, color):
+def _draw(event, color, size = pencil_size):
     global previous_point, current_point
 
     current_point = [event.x, event.y]
@@ -48,7 +48,7 @@ def _draw(event, color):
         x, y = event.x, event.y
         #canvas.create_oval(x - 4, y - 4, x + 4, y + 4, fill='black')
         canvas.create_line(previous_point[0],previous_point[1],current_point[0],current_point[1], 
-                           fill=color, width=pencil_size, capstyle=tk.ROUND, joinstyle=tk.BEVEL)
+                           fill=color, width=size, capstyle=tk.ROUND, joinstyle=tk.BEVEL)
     
     previous_point = current_point
 
@@ -119,8 +119,8 @@ root.bind("<Button>", _debug_input)
 canvas.bind("<B1-Motion>", lambda event: _draw(event, "black")) #gives extra parameters (color) through lambda function
 canvas.bind("<ButtonPress-1>", lambda event: _draw(event, "black"))
 canvas.bind("<ButtonRelease-1>", _stop_draw)
-canvas.bind("<B3-Motion>", lambda event: _draw(event, "white"))  # Right-click to erase
-canvas.bind("<ButtonPress-3>", lambda event: _draw(event, "white"))
+canvas.bind("<B3-Motion>", lambda event: _draw(event, "white", pencil_size*2))  # Right-click to erase
+canvas.bind("<ButtonPress-3>", lambda event: _draw(event, "white", pencil_size*2))
 canvas.bind("<ButtonRelease-3>", _stop_draw)
 root.bind('<Return>', _save_image)  # Enter to save image
 

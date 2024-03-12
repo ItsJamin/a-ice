@@ -1,5 +1,6 @@
 import os
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageGrab
+import io
 
 PATH_TO_LIST = "data/lists/"
 PATH_TO_IMAGES = "data/images/"
@@ -18,16 +19,13 @@ def create_and_save_image(canvas, width, height, label, dataset, ending=".png"):
     create_folder(file_path)
 
     # Recreating Image
-    image = Image.new("L", (width, height), "white")
-    draw = ImageDraw.Draw(image)
-    for item in canvas.find_all():
-        coords = canvas.coords(item)
-        color = canvas.itemcget(item, "fill") 
-        draw.ellipse(coords, fill=color)
+    postscript = canvas.postscript(colormode="color")
+    image = Image.open(io.BytesIO(postscript.encode("utf-8")))
     
     image_index = len(os.listdir(file_path))
     print(f"Index of {label}: {image_index}")
     image.save(os.path.join(file_path, f"{image_index}.png"))
+    #image.show()
 
 
 # Function for creating a folder if it does not exist
