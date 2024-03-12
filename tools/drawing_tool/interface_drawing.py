@@ -4,17 +4,15 @@ import sys
 sys.path.append('../file_tool/')
 import file_manager as files
 
-themes = "letters_small" # change for other datasets (shapes_simple, letters_small)
+themes = "shapes_simple" # change for other datasets (shapes_simple, letters_small)
 _width, _height = 256, 256
 _MAX_WIDTH, _MAX_HEIGHT = 1024, 576
-
 
 concepts_to_draw = []
 
 # Variables to record whether the mouse is pressed
-drawing = False
-erasing = False
-previous_coordinates = None
+pencil_size = 12
+previous_point, current_point = [0,0], [0,0]
 
 #--- (Event)-Functions ---#
 
@@ -37,38 +35,39 @@ def _save_image(event = None):
 def _skip_theme():
     chosen_theme.set(random.choice(concepts_to_draw))
 
-def _start_draw(event):
-    global drawing
-    drawing = True
-    x, y = event.x, event.y
-    canvas.create_oval(x - 4, y - 4, x + 4, y + 4, fill='black')
-
 def _stop_draw(event):
-    global drawing
-    drawing = False
+    global previous_point
+    previous_point = [0,0]
 
-def _draw(event):
-    if drawing:
+def _draw(event, color):
+    global previous_point, current_point
+
+    current_point = [event.x, event.y]
+    
+    if previous_point != [0,0]:
         x, y = event.x, event.y
-        canvas.create_oval(x - 4, y - 4, x + 4, y + 4, fill='black')
-
-def _start_erase(event):
-    global erasing
-    erasing = True
-    x, y = event.x, event.y
-    canvas.create_oval(x - 8, y - 8, x + 8, y + 8, fill='white', outline="white")
-
-def _stop_erase(event):
-    global erasing
-    erasing = False
+        #canvas.create_oval(x - 4, y - 4, x + 4, y + 4, fill='black')
+        canvas.create_line(previous_point[0],previous_point[1],current_point[0],current_point[1], 
+                           fill=color, width=pencil_size, capstyle=tk.ROUND, joinstyle=tk.BEVEL)
+    
+    previous_point = current_point
 
 def _erase(event):
-    if erasing:
+    global previous_point, current_point
+    current_point = [event.x, event.y]
+    
+    if previous_point != [0,0]:
         x, y = event.x, event.y
-        canvas.create_oval(x - 8, y - 8, x + 8, y + 8, fill='white', outline="white")
+        canvas.create_line(previous_point[0],previous_point[1],current_point[0],current_point[1], 
+                           fill="white", width=pencil_size, capstyle=tk.ROUND, joinstyle=tk.BEVEL)
+    
+    previous_point = current_point
 
 def _clear_canvas():
     canvas.delete("all")
+
+def _debug_input(event):
+    pass #print(event.num)
 
 #--- Creating Interface ---#
 
@@ -115,17 +114,14 @@ save_button.pack(side=tk.RIGHT, padx=5)
 clear_button = tk.Button(button_frame, text="Clear Canvas", command=_clear_canvas)
 clear_button.pack(side=tk.LEFT, padx=5)
 
-def callback(event):
-    print(event.num)
-
 # Event Binding
-root.bind("<Button>", callback)
-canvas.bind("<B1-Motion>", _draw)
-canvas.bind("<ButtonPress-1>", _start_draw)
+root.bind("<Button>", _debug_input)
+canvas.bind("<B1-Motion>", lambda event: _draw(event, "black")) #gives extra parameters (color) through lambda function
+canvas.bind("<ButtonPress-1>", lambda event: _draw(event, "black"))
 canvas.bind("<ButtonRelease-1>", _stop_draw)
-canvas.bind("<B3-Motion>", _erase)  # Right-click to erase
-canvas.bind("<ButtonPress-3>", _start_erase)
-canvas.bind("<ButtonRelease-3>", _stop_erase)
+canvas.bind("<B3-Motion>", lambda event: _draw(event, "white"))  # Right-click to erase
+canvas.bind("<ButtonPress-3>", lambda event: _draw(event, "white"))
+canvas.bind("<ButtonRelease-3>", _stop_draw)
 root.bind('<Return>', _save_image)  # Enter to save image
 
 # Start the Interface Loop
