@@ -1,8 +1,6 @@
-import os
 import random
 import tkinter as tk
-from PIL import Image, ImageDraw
-import file_manager as files
+import tools.file_manager as files
 
 themes = "shapes_simple"
 _width, _height = 256, 256
