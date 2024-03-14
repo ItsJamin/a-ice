@@ -5,7 +5,6 @@ sys.path.append('../file_tool/')
 import _file_manager as files
 
 themes = "shapes_simple" # change for other datasets (shapes_simple, letters_small)
-is_train = True
 _width, _height = 256, 256
 _MAX_WIDTH, _MAX_HEIGHT = 1024, 576
 
@@ -29,9 +28,8 @@ def _update_canvas_size():
         pass  # Ignore non-integer input
 
 def _save_image(event = None):
-    global themes, is_train
     if chosen_theme.get() is not None:
-        files.create_and_save_image(canvas, _width, _height, chosen_theme.get(), themes, ending=".png", training_data=is_train)
+        files.create_and_save_image(canvas, _width, _height, chosen_theme.get(), themes, ending=".png")
         canvas.delete("all")
 
 def _skip_theme():
@@ -67,11 +65,6 @@ def _erase(event):
 
 def _clear_canvas():
     canvas.delete("all")
-
-
-def _toggle_is_training_data():
-    global is_train
-    is_train = train_checkbox_var.get()
 
 def _debug_input(event):
     pass #print(event.num)
@@ -120,12 +113,6 @@ save_button.pack(side=tk.RIGHT, padx=5)
 
 clear_button = tk.Button(button_frame, text="Clear Canvas", command=_clear_canvas)
 clear_button.pack(side=tk.LEFT, padx=5)
-
-train_checkbox_var = tk.BooleanVar(value=is_train)
-
-train_checkbox = tk.Checkbutton(root, text="Training Mode", variable=train_checkbox_var)
-train_checkbox.pack()
-train_checkbox.config(command=_toggle_is_training_data)
 
 # Event Binding
 root.bind("<Button>", _debug_input)
