@@ -2,7 +2,7 @@ import random
 import tkinter as tk
 import sys
 sys.path.append('../file_tool/')
-import file_manager as files
+import _file_manager as files
 
 themes = "shapes_simple" # change for other datasets (shapes_simple, letters_small)
 _width, _height = 256, 256

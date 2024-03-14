@@ -30,6 +30,8 @@ Current datasets:
 
 ### simple shapes (256x256)
 
+Image Classifier
+
 Black and white images of hand-drawn shapes:
 - circle
 - line
