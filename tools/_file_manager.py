@@ -13,9 +13,13 @@ def load_list(label):
     return []
 
 
-def create_and_save_image(canvas, width, height, label, dataset, ending=".png"):
+def create_and_save_image(canvas, width, height, label, dataset, ending=".png", training_data=True):
     # Assuring that Folders are generated correctly
-    file_path = os.path.join(os.getcwd(), PATH_TO_IMAGES, f"{dataset}_{width}_{height}", label)
+    if training_data:
+        file_path = os.path.join(os.getcwd(), PATH_TO_IMAGES, f"{dataset}_{width}_{height}", "train",label)
+    else:
+        file_path = os.path.join(os.getcwd(), PATH_TO_IMAGES,f"{dataset}_{width}_{height}", "test/test") #saves in test folder
+    
     create_folder(file_path)
 
     # Recreating Image
