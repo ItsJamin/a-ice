@@ -13,7 +13,12 @@ Feel free to contribute :)
 
 ### aCorn
 
-Aim: to recognize simple, hand-drawn shapes
+to recognize simple, hand-drawn shapes such as:
+- cross
+- circle
+- line
+- rectangle
+- triangle
 
 ## Tools
 
@@ -23,6 +28,11 @@ A tool to draw images for labels and add them to datasets.
 
 Standards for pictures:
 - 256x256
+
+### Model Prediction Tool
+
+With this tool you can draw images, and loaded model (image classifier model) guesses what it should be.
+
 
 ## Data
 
