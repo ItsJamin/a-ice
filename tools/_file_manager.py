@@ -4,6 +4,7 @@ import io
 
 PATH_TO_LIST = "data/lists/"
 PATH_TO_IMAGES = "data/images/"
+PATH_TO_TEST_IMAGES = "data/test_images/"
 
 def load_list(label):
     file_path = os.path.join(os.getcwd(), PATH_TO_LIST, label)
@@ -13,11 +14,11 @@ def load_list(label):
     return []
 
 
-def create_and_save_image(canvas, width, height, label, dataset, ending=".png", save = True):
+def create_and_save_image(canvas, width, height, label, dataset, ending=".png", test_images=False):
     # Recreating Image
     image = create_image(canvas)
 
-    save_image(image, width, height, label, dataset, ending)
+    save_image(image, width, height, label, dataset, ending, test_images)
     
     return image
 
@@ -27,9 +28,13 @@ def create_image(canvas):
     image = Image.open(io.BytesIO(postscript.encode("utf-8")))
     return image
 
-def save_image(image, width, height, label, dataset, ending):
+def save_image(image, width, height, label, dataset, ending, test_images):
     # Assuring that Folders are generated correctly
-    file_path = os.path.join(os.getcwd(), PATH_TO_IMAGES, f"{dataset}_{width}_{height}", label)
+    if test_images:
+        base_path = PATH_TO_TEST_IMAGES
+    else:
+        base_path = PATH_TO_IMAGES
+    file_path = os.path.join(os.getcwd(), base_path, f"{dataset}_{width}_{height}", label)
     create_folder(file_path)
     
     image_index = len(os.listdir(file_path))

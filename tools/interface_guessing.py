@@ -6,8 +6,9 @@ import tensorflow as tf
 import keras
 import os
 import numpy as np
+from PIL import Image
 
-model_path = "data/trained_models/acorn_2024-03-14.keras"
+model_path = "data/trained_models/acorn_2024-03-17.keras"
 dataset_path = "data/images/shapes_simple_256_256"
 model = keras.models.load_model(os.path.join(os.getcwd(),model_path))
 class_names = os.listdir(dataset_path)
@@ -24,7 +25,8 @@ pencil_size = 8
 # TODO: Implement loading Classification Translator (Numbers to Categories)
 def _get_model_prediction():
 
-    image = files.create_image(canvas)
+    #image = files.create_image(canvas)
+    image = Image.open(os.path.join(os.getcwd(),dataset_path,"circle/69.png"))
     processed_image = preprocess_test_image(image)
 
     predictions = model.predict(processed_image)

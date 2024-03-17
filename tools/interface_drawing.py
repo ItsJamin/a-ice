@@ -28,7 +28,7 @@ def _update_canvas_size():
 
 def _save_image(event = None):
     if chosen_theme.get() is not None:
-        files.create_and_save_image(canvas, _width, _height, chosen_theme.get(), themes, ending=".png")
+        files.create_and_save_image(canvas, _width, _height, chosen_theme.get(), themes, ".png", True)
         canvas.delete("all")
 
 def _skip_theme():

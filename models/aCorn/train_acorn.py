@@ -87,12 +87,12 @@ def create_model():
         layers.Conv2D(16, 3, padding='same', activation='relu'),
         layers.MaxPooling2D(),
         layers.Conv2D(32, 3, padding='same', activation='relu'),
-        #layers.MaxPooling2D(),
-        #layers.Conv2D(64, 3, padding='same', activation='relu'),
+        layers.MaxPooling2D(),
+        layers.Conv2D(64, 3, padding='same', activation='relu'),
         layers.MaxPooling2D(),
         layers.Flatten(),
         layers.Dense(128, activation='relu'),
-        layers.Dense(num_classes)
+        layers.Dense(num_classes, activation='softmax')
     ])
 
     # Create model
