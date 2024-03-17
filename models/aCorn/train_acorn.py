@@ -8,15 +8,17 @@ import random
 from datetime import datetime
 
 PATH_TO_IMAGES = "data/images/"
+PATH_TO_TEST_IMAGES = "data/test_images/"
 PATH_TO_MODELS = "data/trained_models/"
 
 dataset_name = "shapes_simple_256_256"
 data_dir = os.path.join(PATH_TO_IMAGES, dataset_name)
+test_dir = os.path.join(PATH_TO_TEST_IMAGES, dataset_name)
 width, height = 256, 256
 
 batch_size = 12
 
-train_ds, val_ds = None, None
+train_ds, val_ds, test_ds = None, None, None
 model = None
 
 #--- Preprocessing of Images ---#
@@ -45,8 +47,15 @@ def get_datasets(seed = 123):
         seed=seed,
         image_size=(height, width),
         batch_size=batch_size)
+    
+    test_ds = keras.utils.image_dataset_from_directory(
+        test_dir,
+        seed=seed,
+        image_size=(height, width),
+        batch_size=batch_size)
+    
 
-    return train_ds, val_ds
+    return train_ds, val_ds, test_ds
 
 def visualize_training_process(history, epochs):
     acc = history.history['accuracy']
@@ -92,7 +101,7 @@ def create_model():
         layers.MaxPooling2D(),
         layers.Flatten(),
         layers.Dense(128, activation='relu'),
-        layers.Dense(num_classes, activation='softmax')
+        layers.Dense(num_classes, activation='relu')
     ])
 
     # Create model
@@ -111,6 +120,11 @@ def save_model():
     date = datetime.today().strftime('%Y-%m-%d')
     model.save(os.path.join(PATH_TO_MODELS,f'acorn_{date}.keras'))
 
+def evaluate_model(model, test_ds):
+    # Evaluate the model on the test dataset
+    test_loss, test_accuracy = model.evaluate(test_ds)
+    print(f"Test Accuracy: {test_accuracy}")
+    print(f"Test Loss: {test_loss}")
 
 #--- Execution ---#
     
@@ -118,7 +132,7 @@ if __name__ == "__main__":
 
     # Create data
     
-    train_ds, val_ds = get_datasets()
+    train_ds, val_ds, test_ds = get_datasets()
 
     class_names = train_ds.class_names
 
@@ -130,6 +144,7 @@ if __name__ == "__main__":
 
     train_ds = train_ds.cache().shuffle(1000).prefetch(buffer_size=AUTOTUNE)
     val_ds = val_ds.cache().prefetch(buffer_size=AUTOTUNE)
+    test_ds = test_ds.cache().prefetch(buffer_size=AUTOTUNE)
 
     # Create model
     model = create_model()
@@ -141,6 +156,8 @@ if __name__ == "__main__":
     history = train_model(epochs)
 
     visualize_training_process(history, epochs)
+
+    evaluate_model(model, test_ds)
 
     save_model()
 
