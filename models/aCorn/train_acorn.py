@@ -16,14 +16,12 @@ data_dir = os.path.join(PATH_TO_IMAGES, dataset_name)
 test_dir = os.path.join(PATH_TO_TEST_IMAGES, dataset_name)
 width, height = 256, 256
 
-batch_size = 12
-
 train_ds, val_ds, test_ds = None, None, None
 model = None
 
 #--- Preprocessing of Images ---#
 
-def get_datasets(seed = 123):
+def get_datasets(seed = 123, batch_size = 10):
 
     # Generate seed
     # (needs to be same for train_ds and val_ds to properly divde images)
@@ -95,7 +93,7 @@ def create_model():
         layers.Rescaling(1./255, input_shape=(height, width, 3)), #first layers normalizes pixel (0-255) -> (0.0->1.0)
         layers.Conv2D(16, 3, padding='same', activation='relu'),
         layers.MaxPooling2D(),
-        layers.Conv2D(32, 3, padding='same', activation='relu'),
+        layers.Conv2D(32, 3, padding='same', activation='sigmoid'),
         layers.MaxPooling2D(),
         layers.Conv2D(64, 3, padding='same', activation='relu'),
         layers.MaxPooling2D(),
@@ -127,12 +125,15 @@ def evaluate_model(model, test_ds):
     print(f"Test Loss: {test_loss}")
 
 #--- Execution ---#
-    
+
+batch_size = 100
+epochs = 2000
+
 if __name__ == "__main__":
 
     # Create data
     
-    train_ds, val_ds, test_ds = get_datasets()
+    train_ds, val_ds, test_ds = get_datasets(0, batch_size)
 
     class_names = train_ds.class_names
 
@@ -150,14 +151,14 @@ if __name__ == "__main__":
     model = create_model()
     model.summary()
 
-    # Train the model
-    epochs = 7
+    # Train the modes
 
     history = train_model(epochs)
 
-    visualize_training_process(history, epochs)
-
     evaluate_model(model, test_ds)
 
+    visualize_training_process(history, epochs)
+
     save_model()
+    
 

@@ -1,8 +1,8 @@
-import random
 import tkinter as tk
 import _file_manager as files
 import _canvas_draw as cdraw
 import tensorflow as tf
+import matplotlib.pyplot as plt
 import keras
 import os
 import numpy as np
@@ -11,6 +11,7 @@ from PIL import Image
 model_path = "data/trained_models/acorn_2024-03-17.keras"
 dataset_path = "data/images/shapes_simple_256_256"
 model = keras.models.load_model(os.path.join(os.getcwd(),model_path))
+print(model.summary())
 class_names = os.listdir(dataset_path)
 print(class_names)
 
@@ -22,31 +23,29 @@ pencil_size = 8
 
 #--- (Event)-Functions ---#
 
-# TODO: Implement loading Classification Translator (Numbers to Categories)
 def _get_model_prediction():
 
-    #image = files.create_image(canvas)
-    image = Image.open(os.path.join(os.getcwd(),dataset_path,"circle/69.png"))
+    image = files.create_image(canvas)
+    #image = Image.open(os.path.join(os.getcwd(),dataset_path,"circle/69.png"))
     processed_image = preprocess_test_image(image)
 
-    predictions = model.predict(processed_image)
+    predictions = model.predict(processed_image[None,:,:])
     print(predictions)
 
     predicted_class_index = np.argmax(predictions)
-    print(predicted_class_index)
     predicted_class = class_names[predicted_class_index]
 
     output_label.config(text=predicted_class)
 
-def preprocess_test_image(image, target_size=(_width, _height)):
-    # Öffnen und Skalieren des Bildes
-    image = image.resize(target_size)
-    image = image.convert("RGB")
-    # Normalisieren der Pixelwerte
-    img_array = np.array(image) / 255.0
-    # Hinzufügen einer zusätzlichen Dimension, um das Bildbatchformat zu erstellen
-    img_array = np.expand_dims(img_array, axis=0)
-    return img_array
+def preprocess_test_image(image, target_size=(256, 256)):    
+    image = image.resize(target_size)   
+    reshaped_image = np.array(image)
+    return reshaped_image
+
+def _reset():
+    cdraw._clear_canvas(canvas) 
+    output_label.config(text="")
+
 #--- Creating Interface ---#
 
 root = tk.Tk()
@@ -64,15 +63,15 @@ output_label.pack()
 button_frame = tk.Frame(root)
 button_frame.pack(pady=10)
 
-save_button = tk.Button(button_frame, text="Submit to Model", command=_get_model_prediction)
-save_button.pack(side=tk.RIGHT, padx=5)
+submit_button = tk.Button(button_frame, text="Submit to Model", command=_get_model_prediction)
+submit_button.pack(side=tk.RIGHT, padx=5)
 
-clear_button = tk.Button(button_frame, text="Clear Canvas", command=lambda: cdraw._clear_canvas(canvas))
+clear_button = tk.Button(button_frame, text="Clear Canvas", command=_reset)
 clear_button.pack(side=tk.LEFT, padx=5)
 
 # Event Binding
 
-root.bind('<Return>', lambda: None)  # TODO: Function for sending Image to Trained Model
+root.bind('<Return>', lambda event: _get_model_prediction())
 
 #gives extra parameters through lambda function to cdraw functions
 canvas.bind("<B1-Motion>", lambda event: cdraw._draw(event, canvas, pencil_size)) 
