@@ -1,6 +1,5 @@
 import random
 import tkinter as tk
-import sys
 import _file_manager as files
 import _canvas_draw as cdraw
 
@@ -10,9 +9,9 @@ _MAX_WIDTH, _MAX_HEIGHT = 1024, 576
 
 concepts_to_draw = []
 
-# Variables to record whether the mouse is pressed
+# Drawing Variables
 pencil_size = 8
-#previous_point, current_point = [0,0], [0,0]
+
 
 #--- (Event)-Functions ---#
 
@@ -38,8 +37,6 @@ def _skip_theme():
 def _debug_input(event):
     pass #print(event.num)
 
-def _clear_canvas():
-    cdraw._clear_canvas(canvas)
 
 #--- Creating Interface ---#
 
@@ -83,7 +80,7 @@ skip_button.pack(side=tk.LEFT, padx=5)
 save_button = tk.Button(button_frame, text="Save", command=_save_image)
 save_button.pack(side=tk.RIGHT, padx=5)
 
-clear_button = tk.Button(button_frame, text="Clear Canvas", command=_clear_canvas)
+clear_button = tk.Button(button_frame, text="Clear Canvas", command=lambda: cdraw._clear_canvas(canvas))
 clear_button.pack(side=tk.LEFT, padx=5)
 
 # Event Binding

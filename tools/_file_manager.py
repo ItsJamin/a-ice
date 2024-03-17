@@ -13,19 +13,28 @@ def load_list(label):
     return []
 
 
-def create_and_save_image(canvas, width, height, label, dataset, ending=".png"):
+def create_and_save_image(canvas, width, height, label, dataset, ending=".png", save = True):
+    # Recreating Image
+    image = create_image(canvas)
+
+    save_image(image, width, height, label, dataset, ending)
+    
+    return image
+
+
+def create_image(canvas):
+    postscript = canvas.postscript(colormode="color")
+    image = Image.open(io.BytesIO(postscript.encode("utf-8")))
+    return image
+
+def save_image(image, width, height, label, dataset, ending):
     # Assuring that Folders are generated correctly
     file_path = os.path.join(os.getcwd(), PATH_TO_IMAGES, f"{dataset}_{width}_{height}", label)
     create_folder(file_path)
-
-    # Recreating Image
-    postscript = canvas.postscript(colormode="color")
-    image = Image.open(io.BytesIO(postscript.encode("utf-8")))
     
     image_index = len(os.listdir(file_path))
     print(f"Index of {label}: {image_index}")
     image.save(os.path.join(file_path, f"{image_index}.png"))
-    #image.show()
 
 
 # Function for creating a folder if it does not exist
