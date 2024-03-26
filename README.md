@@ -4,7 +4,9 @@
 aIce is a playground for data creation, data processing and machine learning.
 
 Models: Machine Learning Models for different tasks
+
 Tools: To easily create datasets or other things
+
 Data: all the datasets used
 
 Feel free to contribute :)
